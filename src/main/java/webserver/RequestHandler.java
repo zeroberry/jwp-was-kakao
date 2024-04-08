@@ -30,18 +30,28 @@ public class RequestHandler implements Runnable {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            InputStreamReader ir = new InputStreamReader(in);
-            BufferedReader br = new BufferedReader(ir);
-            
-            DataOutputStream dos = new DataOutputStream(out); // 클라이언트로 보낼 것
-            
+            handle(in, out);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+    
+    private void handle(final InputStream in, final OutputStream out) throws IOException {
+        InputStreamReader ir = new InputStreamReader(in);
+        BufferedReader br = new BufferedReader(ir);
+        
+        DataOutputStream dos = new DataOutputStream(out); // 클라이언트로 보낼 것
+        
+        try {
             RequestHeader requestHeader = RequestHeaderParser.parse(br);
             byte[] body = controller.service(requestHeader);
             
             response200Header(dos, body.length); // 헤더를 채움 (meatadata)
             responseBody(dos, body); // body를 채움 (content, html)
-        } catch (IOException e) {
+            
+        } catch (IllegalArgumentException e) {
             logger.error(e.getMessage());
+            response404Error(dos);
         }
     }
 
@@ -50,6 +60,16 @@ public class RequestHandler implements Runnable {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
             dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
+            dos.writeBytes("\r\n");
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
+    }
+    
+    private void response404Error(DataOutputStream dos) {
+        try {
+            dos.writeBytes("HTTP/1.1 404 NOT FOUND \r\n");
+            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {
             logger.error(e.getMessage());
