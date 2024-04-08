@@ -1,33 +1,45 @@
 package webserver;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import utils.RequestHeaderParser;
+
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
+    private final Controller controller;
 
     private Socket connection;
 
-    public RequestHandler(Socket connectionSocket) {
+    public RequestHandler(Socket connectionSocket, Controller controller) {
         this.connection = connectionSocket;
+        this.controller = controller;
     }
-
+    
+    @Override
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
-            DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello World".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
+            InputStreamReader ir = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(ir);
+            
+            DataOutputStream dos = new DataOutputStream(out); // 클라이언트로 보낼 것
+            
+            RequestHeader requestHeader = RequestHeaderParser.parse(br);
+            byte[] body = controller.service(requestHeader);
+            
+            response200Header(dos, body.length); // 헤더를 채움 (meatadata)
+            responseBody(dos, body); // body를 채움 (content, html)
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
