@@ -48,7 +48,6 @@ public class RequestHandler implements Runnable {
             
             response200Header(dos, body.length); // 헤더를 채움 (meatadata)
             responseBody(dos, body); // body를 채움 (content, html)
-            
         } catch (IllegalArgumentException e) {
             logger.error(e.getMessage());
             response404Error(dos);

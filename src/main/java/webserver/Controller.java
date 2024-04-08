@@ -3,6 +3,7 @@ package webserver;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+import service.UserService;
 import utils.FileIoUtils;
 
 public class Controller {
@@ -10,10 +11,16 @@ public class Controller {
     private static final String HTML_SUFFIX = ".html";
     private static final String STATIC_PREFIX = "./static";
     
+    private final UserService userService;
+    
+    public Controller(final UserService userService) {
+        this.userService = userService;
+    }
+    
     public byte[] service(final RequestHeader requestHeader) {
         try {
             if (requestHeader.getMethod().equals("GET")) {
-                return doGet(requestHeader.getPath());
+                return doGet(requestHeader);
             }
             throw new IllegalArgumentException("지원하지 않는 메소드입니다.");
         } catch (Exception e) {
@@ -21,7 +28,12 @@ public class Controller {
         }
     }
     
-    private byte[] doGet(final String path) throws IOException, URISyntaxException {
+    private byte[] doGet(final RequestHeader requestHeader) throws IOException, URISyntaxException {
+        String path = requestHeader.getPath();
+        if (path.equals("/user/create")) {
+            userService.createUser(requestHeader.getQueryParameter());
+            return new byte[0];
+        }
         if (path.endsWith(HTML_SUFFIX)) {
             return FileIoUtils.loadFileFromClasspath(TEMPLE_PREFIX + path);
         }

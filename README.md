@@ -14,8 +14,8 @@
   - [x] path가 `index.html`일 경우 해당 파일을 응답한다.
   - [x] 존재하지 않는 path 요청이나 null 값은 404로 응답한다.
 - [x] CSS 파일을 지원한다.
-- [ ] `GET /user/create` 경로로 온 query string을 지원한다.
-  - [ ] key=value 형태로 전달된 query string을 `User` 객체로 매핑한다.
+- [x] `GET /user/create` 경로로 온 query string을 지원한다.
+  - [x] key=value 형태로 전달된 query string을 `User` 객체로 매핑한다.
 - [ ] `POST /user/create` 경로로 온 회원가입 기능을 구현한다.
 - [ ] 리다이렉트 기능을 지원한다.
   - [ ] 회원가입 완료 후 `/index.html`로 이동한다.
