@@ -1,7 +1,10 @@
-package webserver;
+package webserver.entity;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+
+import webserver.FileExtension;
+import webserver.StatusCode;
 
 public class ResponseEntity {
     private final StatusCode statusCode;

@@ -8,6 +8,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import service.UserService;
+import webserver.entity.RequestEntity;
+import webserver.entity.RequestHeader;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class ControllerTest {

@@ -1,4 +1,4 @@
-package webserver;
+package webserver.entity;
 
 import java.util.Collections;
 import java.util.HashMap;

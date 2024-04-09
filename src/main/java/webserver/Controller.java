@@ -1,10 +1,10 @@
 package webserver;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import service.UserService;
 import utils.FileIoUtils;
+import webserver.entity.RequestEntity;
+import webserver.entity.RequestHeader;
+import webserver.entity.ResponseEntity;
 
 public class Controller {
     private final UserService userService;

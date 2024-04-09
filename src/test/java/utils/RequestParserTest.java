@@ -9,7 +9,7 @@ import java.io.StringReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import webserver.RequestEntity;
+import webserver.entity.RequestEntity;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class RequestParserTest {

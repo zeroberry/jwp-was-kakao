@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import webserver.RequestBody;
-import webserver.RequestEntity;
-import webserver.RequestHeader;
+import webserver.entity.RequestBody;
+import webserver.entity.RequestEntity;
+import webserver.entity.RequestHeader;
 
 public class RequestParser {
     public static RequestEntity parse(final BufferedReader br) throws IOException {
