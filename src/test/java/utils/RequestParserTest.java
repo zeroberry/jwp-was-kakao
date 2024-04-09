@@ -19,6 +19,7 @@ public class RequestParserTest {
 		final String request = "POST /user/create HTTP/1.1\n"
 			+ "Host: localhost:8080\nConnection: keep-alive\n"
 			+ "Accept: */*\n"
+			+ "Content-Length: 92\n"
 			+ "\r\n"
 			+ "userId=cu&password=password&name=%EC%9D%B4%EB%8F%99%EA%B7%9C&email=brainbackdoor%40gmail.com";
 		final StringReader stringReader =  new StringReader(request);
