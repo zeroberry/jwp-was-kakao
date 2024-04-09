@@ -2,7 +2,6 @@ package utils;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;

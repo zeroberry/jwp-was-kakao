@@ -9,12 +9,12 @@ import java.util.Optional;
 import utils.FormDataParser;
 
 public class RequestHeader {
-    private final String method;
+    private final HttpMethod method;
     private final String path;
     private final Map<String, String> headers;
     private final Map<String, String> queryParameters;
     
-    public RequestHeader(final String method,
+    public RequestHeader(final HttpMethod method,
         final String path,
         final Map<String, String> headers,
         final Map<String, String> queryParameters) {
@@ -37,14 +37,14 @@ public class RequestHeader {
             final String[] header = headerLine.split(": ");
             headers.put(header[0], header[1]);
         });
-        return new RequestHeader(method, path, headers, FormDataParser.parse(queryString));
+        return new RequestHeader(HttpMethod.of(method), path, headers, FormDataParser.parse(queryString));
     }
     
     public Optional<String> getHeaderField(final String headerKey) {
         return Optional.ofNullable(headers.get(headerKey));
     }
     
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
     

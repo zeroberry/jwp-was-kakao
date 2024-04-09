@@ -10,7 +10,7 @@ public class ResponseEntity {
     private final StatusCode statusCode;
     private final Map<String, String> headers;
     private final byte[] body;
-
+    
     private ResponseEntity(final StatusCode statusCode, final Map<String, String> headers, final byte[] body) {
         this.statusCode = statusCode;
         this.headers = headers;

@@ -20,7 +20,7 @@ class RequestHeaderTest {
         final RequestHeader requestHeader = RequestHeader.fromHeaderString(requestLine, headerLines);
         
         Assertions.assertAll(
-            () -> assertThat(requestHeader.getMethod()).isEqualTo("GET"),
+            () -> assertThat(requestHeader.getMethod()).isEqualTo(HttpMethod.GET),
             () -> assertThat(requestHeader.getPath()).isEqualTo("/index.html"),
             () -> assertThat(requestHeader.getHeaderField("Host").isPresent()).isTrue(),
             () -> assertThat(requestHeader.getHeaderField("Host").get()).isEqualTo("localhost:8080"),

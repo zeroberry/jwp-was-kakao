@@ -18,9 +18,9 @@ import webserver.entity.ResponseEntity;
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
     private final Controller controller;
-
+    
     private Socket connection;
-
+    
     public RequestHandler(Socket connectionSocket, Controller controller) {
         this.connection = connectionSocket;
         this.controller = controller;
@@ -29,8 +29,8 @@ public class RequestHandler implements Runnable {
     @Override
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
-
+            connection.getPort());
+        
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             handle(in, out);
         } catch (IOException e) {

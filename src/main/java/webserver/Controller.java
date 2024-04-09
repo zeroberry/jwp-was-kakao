@@ -1,49 +1,38 @@
 package webserver;
 
+import service.FileService;
 import service.UserService;
-import utils.FileIoUtils;
+import webserver.entity.HttpMethod;
 import webserver.entity.RequestEntity;
-import webserver.entity.RequestHeader;
 import webserver.entity.ResponseEntity;
 
 public class Controller {
+    private static final String USER_CREATE_PATH = "/user/create";
     private final UserService userService;
-
-    public Controller(final UserService userService) {
+    private final FileService fileService;
+    
+    public Controller(final UserService userService, final FileService fileService) {
         this.userService = userService;
+        this.fileService = fileService;
     }
-
+    
     public ResponseEntity service(final RequestEntity request) {
-        if (request.getHeader().getMethod().equals("GET")) {
-            return doGet(request.getHeader());
+        if (request.getHeader().getPath().equals(USER_CREATE_PATH)) {
+            return createUser(request);
         }
-        if (request.getHeader().getMethod().equals("POST")) {
-            return doPost(request);
-        }
-        throw new IllegalArgumentException("지원하지 않는 메소드입니다.");
-    }
-
-    private ResponseEntity doGet(final RequestHeader requestHeader) {
-        String path = requestHeader.getPath();
-        if (path.equals("/user/create")) {
-            userService.createUser(requestHeader.getQueryParameter());
-            return ResponseEntity.redirectResponseEntity("/index.html");
-        }
-
+        
         try {
-            byte[] staticFileData = FileIoUtils.loadFileFromClasspath(path);
-            return ResponseEntity.of(path, staticFileData);
+            return fileService.serveFile(request.getHeader());
         } catch (Exception e) {
-            return ResponseEntity.notFoundResponseEntity();
+            throw new IllegalArgumentException("파일이 존재하지 않습니다.");
         }
     }
     
-    private ResponseEntity doPost(final RequestEntity request) {
-        String path = request.getHeader().getPath();
-        if (path.equals("/user/create")) {
-            userService.createUser(request.getBody().get());
-            return ResponseEntity.redirectResponseEntity("/index.html");
+    private ResponseEntity createUser(final RequestEntity request) {
+        if (request.getHeader().getMethod().equals(HttpMethod.GET)) {
+            userService.createUser(request.getHeader().getQueryParameter());
         }
-        throw new IllegalArgumentException("지원하지 않는 메소드입니다.");
+        userService.createUser(request.getBody().get());
+        return ResponseEntity.redirectResponseEntity("/index.html");
     }
 }
