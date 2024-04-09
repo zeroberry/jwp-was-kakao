@@ -17,10 +17,13 @@ public class Controller {
         this.userService = userService;
     }
     
-    public byte[] service(final RequestHeader requestHeader) {
+    public byte[] service(final RequestEntity request) {
         try {
-            if (requestHeader.getMethod().equals("GET")) {
-                return doGet(requestHeader);
+            if (request.getHeader().getMethod().equals("GET")) {
+                return doGet(request.getHeader());
+            }
+            if (request.getHeader().getMethod().equals("POST")) {
+                return doPost(request);
             }
             throw new IllegalArgumentException("지원하지 않는 메소드입니다.");
         } catch (Exception e) {
@@ -38,5 +41,14 @@ public class Controller {
             return FileIoUtils.loadFileFromClasspath(TEMPLE_PREFIX + path);
         }
         return FileIoUtils.loadFileFromClasspath(STATIC_PREFIX + path);
+    }
+    
+    private byte[] doPost(final RequestEntity request) {
+        String path = request.getHeader().getPath();
+        if (path.equals("/user/create")) {
+            userService.createUser(request.getBody().get());
+            return new byte[0];
+        }
+        throw new IllegalArgumentException("지원하지 않는 메소드입니다.");
     }
 }
