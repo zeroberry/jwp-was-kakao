@@ -40,8 +40,8 @@ public class RequestHeader {
         return new RequestHeader(method, path, headers, FormDataParser.parse(queryString));
     }
     
-    public String getHeaderField(final String headerKey) {
-        return Optional.ofNullable(headers.get(headerKey)).orElse("");
+    public Optional<String> getHeaderField(final String headerKey) {
+        return Optional.ofNullable(headers.get(headerKey));
     }
     
     public String getMethod() {

@@ -17,12 +17,6 @@
 - [x] `GET /user/create` 경로로 온 query string을 지원한다.
   - [x] key=value 형태로 전달된 query string을 `User` 객체로 매핑한다.
 - [x] `POST /user/create` 경로로 온 회원가입 기능을 구현한다.
-- [ ] 리다이렉트 기능을 지원한다.
-  - [ ] 회원가입 완료 후 `/index.html`로 이동한다.
-  - [ ] 302 HTTP Status Code를 사용한다.
-
-## 리팩토링 대상
-- [ ] 요청 헤더와 바디를 모두 담는 `Request` 객체 추가
-- [ ] 사용자에게 응답을 데이터를 만드는 객체 추가
-- [ ] 요청 path에 따라 정적 파일을 주거나 동적 서비스 매핑하는 기능을 깔끔하게.
-- [ ] HTTP method를 enum으로
+- [x] 리다이렉트 기능을 지원한다.
+  - [x] 회원가입 완료 후 `/index.html`로 이동한다.
+  - [x] 302 HTTP Status Code를 사용한다.

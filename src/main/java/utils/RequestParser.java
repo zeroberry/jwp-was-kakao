@@ -20,7 +20,7 @@ public class RequestParser {
         }
         
         RequestHeader requestHeader = RequestHeader.fromHeaderString(requestLine, headerLines);
-        int contentLength = Integer.parseInt(requestHeader.getHeaderField("Content-Length"));
+        int contentLength = Integer.parseInt(requestHeader.getHeaderField("Content-Length").orElse("0"));
         
         return new RequestEntity(
             RequestHeader.fromHeaderString(requestLine, headerLines),

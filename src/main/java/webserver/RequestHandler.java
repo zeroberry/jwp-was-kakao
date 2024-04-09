@@ -39,48 +39,23 @@ public class RequestHandler implements Runnable {
     private void handle(final InputStream in, final OutputStream out) throws IOException {
         InputStreamReader ir = new InputStreamReader(in);
         BufferedReader br = new BufferedReader(ir);
+        DataOutputStream dos = new DataOutputStream(out);
         
-        DataOutputStream dos = new DataOutputStream(out); // 클라이언트로 보낼 것
-        
-        try {
-            RequestEntity request = RequestParser.parse(br);
-            byte[] body = controller.service(request);
-            
-            response200Header(dos, body.length); // 헤더를 채움 (meatadata)
-            responseBody(dos, body); // body를 채움 (content, html)
-        } catch (IllegalArgumentException e) {
-            logger.error(e.getMessage());
-            response404Error(dos);
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        ResponseEntity responseData = service(br);
+        dos.writeBytes(responseData.toResponseMessage());
+        dos.flush();
     }
     
-    private void response404Error(DataOutputStream dos) {
+    private ResponseEntity service(BufferedReader br) {
         try {
-            dos.writeBytes("HTTP/1.1 404 NOT FOUND \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
+            RequestEntity request = RequestParser.parse(br);
+            return controller.service(request);
+        } catch (IllegalArgumentException e) {
+            logger.error("IllegalArgumentException : {}", e.getMessage());
+            return ResponseEntity.notFoundResponseEntity();
+        } catch (Exception e) {
+            logger.error("Unknown Exception : {}", e.getMessage());
+            return ResponseEntity.internalServerErrorResponseEntity();
         }
     }
 }
