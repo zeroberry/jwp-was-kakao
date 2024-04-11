@@ -43,6 +43,10 @@ public class RequestHeader {
     public Optional<String> getHeaderField(final String headerKey) {
         return Optional.ofNullable(headers.get(headerKey));
     }
+
+    public int getContentLength() {
+        return Integer.parseInt(getHeaderField("Content-Length").orElse("0"));
+    }
     
     public HttpMethod getMethod() {
         return method;
