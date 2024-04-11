@@ -17,7 +17,7 @@ class FormDataParserTest {
     void 쿼리스트링을_파싱할_수_있다() {
         // given
         final String userId = URLEncoder.encode("cu", StandardCharsets.UTF_8);
-        final String name = URLEncoder.encode("이동규", StandardCharsets.UTF_8);
+        final String name = URLEncoder.encode("이=동&규", StandardCharsets.UTF_8);
         final String formDataString = "userId=" + userId + "&name=" + name;
         
         // when
@@ -27,7 +27,7 @@ class FormDataParserTest {
         assertThat(parsedData)
             .isEqualTo(new HashMap<String, String>() {{
                 put("userId", "cu");
-                put("name", "이동규");
+                put("name", "이=동&규");
             }});
     }
     
