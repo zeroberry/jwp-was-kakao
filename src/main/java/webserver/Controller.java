@@ -23,7 +23,8 @@ public class Controller {
         }
 
         try {
-            return fileService.serveFile(request.getHeader());
+            byte[] file = fileService.serveFile(request.getHeader());
+            return ResponseEntity.of(request.getHeader().getPath(), file);
         } catch (Exception e) {
             throw new IllegalArgumentException("파일이 존재하지 않습니다.");
         }
