@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public enum FileExtension {
-    
+public enum ContentType {
+
     HTML("html", "text/html"),
     CSS("css", "text/css"),
     JS("js", "application/javascript"),
@@ -18,28 +18,28 @@ public enum FileExtension {
     WOFF2("woff2", "font/woff2"),
     EOT("eot", "font/vnd.ms-fontobject"),
     DEFAULT("none", "text/plain");
-    
+
     private static final Pattern EXTENSION_MATCHER = Pattern.compile("\\.([^./\\s]+)$");
-    
+
     private final String extension;
     private final String contentType;
-    
-    FileExtension(String extension, String contentType) {
+
+    ContentType(final String extension, final String contentType) {
         this.extension = extension;
         this.contentType = contentType;
     }
-    
-    public static String convertToContentType(String filePath) {
-        String extension = extension(filePath);
-        return Arrays.stream(FileExtension.values())
-            .filter(fileExtension -> fileExtension.extension.equals(extension))
-            .findFirst()
-            .orElse(DEFAULT)
-            .contentType;
+
+    public static String of(final String filePath) {
+        final String extension = extension(filePath);
+        return Arrays.stream(ContentType.values())
+                .filter(contentType -> contentType.extension.equals(extension))
+                .findFirst()
+                .orElse(DEFAULT)
+                .contentType;
     }
-    
-    private static String extension(String filePath) {
-        Matcher matcher = EXTENSION_MATCHER.matcher(filePath);
+
+    private static String extension(final String filePath) {
+        final Matcher matcher = EXTENSION_MATCHER.matcher(filePath);
         if (matcher.find()) {
             return matcher.group(1);
         }

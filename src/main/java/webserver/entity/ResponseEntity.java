@@ -3,7 +3,7 @@ package webserver.entity;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import webserver.FileExtension;
+import webserver.ContentType;
 import webserver.HttpStatusCode;
 
 public class ResponseEntity {
@@ -25,7 +25,7 @@ public class ResponseEntity {
     
     public static ResponseEntity of(final String path, final byte[] body) {
         return new ResponseEntity(HttpStatusCode.OK,
-            Map.of("Content-Type", FileExtension.convertToContentType(path) + ";charset=utf-8",
+            Map.of("Content-Type", ContentType.of(path) + ";charset=utf-8",
                 "Content-Length: ", String.valueOf(body.length)),
             body);
     }
