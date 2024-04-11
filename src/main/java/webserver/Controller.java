@@ -7,6 +7,7 @@ import webserver.entity.ResponseEntity;
 
 public class Controller {
     private static final String USER_CREATE_PATH = "/user/create";
+
     private final UserService userService;
     private final FileService fileService;
 

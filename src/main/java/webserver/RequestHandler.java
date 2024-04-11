@@ -11,8 +11,8 @@ import java.net.Socket;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
-    private final Controller controller;
 
+    private final Controller controller;
     private final Socket connection;
 
     public RequestHandler(final Socket connectionSocket, final Controller controller) {

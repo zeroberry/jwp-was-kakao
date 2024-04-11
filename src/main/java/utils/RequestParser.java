@@ -11,15 +11,15 @@ import java.util.List;
 
 public class RequestParser {
     public static RequestEntity parse(final BufferedReader br) throws IOException {
-        String requestLine = br.readLine();
+        final String requestLine = br.readLine();
+        final List<String> headerLines = new ArrayList<>();
 
-        List<String> headerLines = new ArrayList<>();
         String line;
         while ((line = br.readLine()) != null && !line.isEmpty()) {
             headerLines.add(line);
         }
 
-        RequestHeader requestHeader = RequestHeader.fromHeaderString(requestLine, headerLines);
+        final RequestHeader requestHeader = RequestHeader.fromHeaderString(requestLine, headerLines);
 
         return new RequestEntity(
                 RequestHeader.fromHeaderString(requestLine, headerLines),

@@ -20,6 +20,7 @@ public enum ContentType {
     DEFAULT("none", "text/plain");
 
     private static final Pattern EXTENSION_MATCHER = Pattern.compile("\\.([^./\\s]+)$");
+    private static final int GROUP_INDEX = 1;
 
     private final String extension;
     private final String contentType;
@@ -41,7 +42,7 @@ public enum ContentType {
     private static String extension(final String filePath) {
         final Matcher matcher = EXTENSION_MATCHER.matcher(filePath);
         if (matcher.find()) {
-            return matcher.group(1);
+            return matcher.group(GROUP_INDEX);
         }
         return DEFAULT.extension;
     }
