@@ -1,45 +1,28 @@
 package webserver.entity;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import utils.FormDataParser;
-
 public class RequestHeader {
-    private final HttpMethod method;
-    private final String path;
+    private final RequestLine requestLine;
     private final Map<String, String> headers;
-    private final Map<String, String> queryParameters;
-    
-    public RequestHeader(final HttpMethod method,
-        final String path,
-        final Map<String, String> headers,
-        final Map<String, String> queryParameters) {
-        
-        this.method = method;
-        this.path = path;
+
+    public RequestHeader(final RequestLine requestLine, final Map<String, String> headers) {
+        this.requestLine = requestLine;
         this.headers = headers;
-        this.queryParameters = queryParameters;
     }
-    
+
     public static RequestHeader fromHeaderString(final String requestLine, final List<String> headerLines) {
-        final String[] line = requestLine.split(" ");
-        final String method = line[0];
-        final String[] url = line[1].split("\\?");
-        final String path = url[0];
-        final String queryString = url.length > 1 ? url[1] : "";
-        
         final Map<String, String> headers = new HashMap<>();
         headerLines.forEach(headerLine -> {
             final String[] header = headerLine.split(": ");
             headers.put(header[0], header[1]);
         });
-        return new RequestHeader(HttpMethod.of(method), path, headers, FormDataParser.parse(queryString));
+        return new RequestHeader(new RequestLine(requestLine), headers);
     }
-    
+
     public Optional<String> getHeaderField(final String headerKey) {
         return Optional.ofNullable(headers.get(headerKey));
     }
@@ -47,16 +30,16 @@ public class RequestHeader {
     public int getContentLength() {
         return Integer.parseInt(getHeaderField("Content-Length").orElse("0"));
     }
-    
+
     public HttpMethod getMethod() {
-        return method;
+        return requestLine.getMethod();
     }
-    
+
     public String getPath() {
-        return path;
+        return requestLine.getPath();
     }
-    
+
     public Map<String, String> getQueryParameter() {
-        return Collections.unmodifiableMap(queryParameters);
+        return requestLine.getQueryParameters();
     }
 }
