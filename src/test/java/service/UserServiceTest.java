@@ -1,5 +1,6 @@
 package service;
 
+import dto.CreateUserDto;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ class UserServiceTest {
         final UserService userService = new UserService();
         final Map<String, String> testUserMap = generateTestUserOfId("testId");
 
-        userService.createUser(testUserMap);
+        userService.createUser(new CreateUserDto(testUserMap));
 
         assertNotNull(userService.getUser("testId"));
     }
@@ -25,10 +26,10 @@ class UserServiceTest {
         final UserService userService = new UserService();
 
         final Map<String, String> testUserMap1 = generateTestUserOfId("test");
-        userService.createUser(testUserMap1);
+        userService.createUser(new CreateUserDto(testUserMap1));
 
         final Map<String, String> testUserMap2 = generateTestUserOfId("test");
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(testUserMap2));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser(new CreateUserDto(testUserMap2)));
     }
 
     private Map<String, String> generateTestUserOfId(final String id) {

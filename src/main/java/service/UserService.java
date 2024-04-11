@@ -1,16 +1,15 @@
 package service;
 
 import db.DataBase;
+import dto.CreateUserDto;
 import model.User;
 
-import java.util.Map;
-
 public class UserService {
-    public void createUser(final Map<String, String> queryParameters) {
-        final User user = new User(queryParameters.get("userId"),
-                queryParameters.get("password"),
-                queryParameters.get("name"),
-                queryParameters.get("email"));
+    public void createUser(final CreateUserDto createUserDto) {
+        final User user = new User(createUserDto.getUserId(),
+                createUserDto.getPassword(),
+                createUserDto.getName(),
+                createUserDto.getEmail());
 
         if (DataBase.findUserById(user.getUserId()) != null) {
             throw new IllegalArgumentException("이미 존재하는 사용자입니다.");

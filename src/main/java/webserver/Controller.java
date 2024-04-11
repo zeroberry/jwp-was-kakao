@@ -1,5 +1,6 @@
 package webserver;
 
+import dto.CreateUserDto;
 import service.FileService;
 import service.UserService;
 import webserver.entity.RequestEntity;
@@ -30,9 +31,9 @@ public class Controller {
 
     private ResponseEntity createUser(final RequestEntity request) {
         if (request.isGet()) {
-            userService.createUser(request.getHeader().getQueryParameter());
+            userService.createUser(new CreateUserDto(request.getHeader().getQueryParameter()));
         }
-        userService.createUser(request.getBody().get());
+        userService.createUser(new CreateUserDto(request.getBody().get()));
         return ResponseEntity.redirectResponseEntity("/index.html");
     }
 }
