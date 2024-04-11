@@ -1,6 +1,6 @@
 package webserver;
 
-public enum StatusCode {
+public enum HttpStatusCode {
     OK(200, "OK"),
     FOUND(302, "Found"),
     NOT_FOUND(404, "Not Found"),
@@ -9,7 +9,7 @@ public enum StatusCode {
     private final int code;
     private final String message;
     
-    StatusCode(final int code, final String message) {
+    HttpStatusCode(final int code, final String message) {
         this.code = code;
         this.message = message;
     }
