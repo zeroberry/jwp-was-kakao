@@ -8,6 +8,14 @@ public class RequestEntity {
         this.requestHeader = requestHeader;
         this.requestBody = requestBody;
     }
+
+    public boolean isGet() {
+        return requestHeader.getMethod().equals(HttpMethod.GET);
+    }
+
+    public boolean pathEquals(final String path) {
+        return requestHeader.getPath().equals(path);
+    }
     
     public RequestHeader getHeader() {
         return requestHeader;
