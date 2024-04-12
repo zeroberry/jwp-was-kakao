@@ -2,10 +2,16 @@ package webserver;
 
 import dto.CreateUserDto;
 import dto.LoginDto;
+import model.User;
 import service.FileService;
 import service.UserService;
 import webserver.entity.RequestEntity;
 import webserver.entity.ResponseEntity;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Map;
 
 public class Controller {
     private static final String USER_CREATE_PATH = "/user/create";
@@ -28,11 +34,32 @@ public class Controller {
         }
 
         try {
-            byte[] file = fileService.serveFile(request.getHeader());
-            return ResponseEntity.of(request.getHeader().getPath(), file);
+            return getResponseFile(request);
         } catch (Exception e) {
             throw new IllegalArgumentException("파일이 존재하지 않습니다.");
         }
+    }
+
+    private ResponseEntity getResponseFile(final RequestEntity request) throws IOException, URISyntaxException {
+        if (request.pathEquals("/user/list.html")) {
+            return getUserList(request);
+        }
+        // fallback
+        if (request.getPath().endsWith(".html")) {
+            final byte[] file = fileService.render(request.getPath(), Map.of());
+            return ResponseEntity.of(request.getPath(), file);
+        }
+        final byte[] file = fileService.serveFile(request.getPath());
+        return ResponseEntity.of(request.getPath(), file);
+    }
+
+    private ResponseEntity getUserList(final RequestEntity request) throws IOException {
+        if (!userService.isLogin(request.getCookies().get("JSESSIONID"))) {
+            return ResponseEntity.redirectResponseEntity("/user/login.html");
+        }
+        final Collection<User> users = userService.findAll();
+        final byte[] file = fileService.render(request.getPath(), Map.of("users", users));
+        return ResponseEntity.of(request.getPath(), file);
     }
 
     private ResponseEntity createUser(final RequestEntity request) {

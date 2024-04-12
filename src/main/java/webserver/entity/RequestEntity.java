@@ -23,6 +23,10 @@ public class RequestEntity {
         return requestHeader.getPath().equals(path);
     }
 
+    public String getPath() {
+        return requestHeader.getPath();
+    }
+
     public Map<String, String> getQueryParameters() {
         return requestHeader.getQueryParameters();
     }
@@ -33,5 +37,9 @@ public class RequestEntity {
 
     public RequestBody getBody() {
         return requestBody;
+    }
+
+    public Map<String, String> getCookies() {
+        return requestHeader.getCookies();
     }
 }

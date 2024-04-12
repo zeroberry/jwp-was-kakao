@@ -5,6 +5,7 @@ import dto.CreateUserDto;
 import dto.LoginDto;
 import model.User;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public class UserService {
@@ -34,5 +35,13 @@ public class UserService {
         }
 
         return UUID.randomUUID().toString();
+    }
+
+    public Collection<User> findAll() {
+        return DataBase.findAll();
+    }
+
+    public boolean isLogin(String jsessionid) {
+        return jsessionid != null;
     }
 }

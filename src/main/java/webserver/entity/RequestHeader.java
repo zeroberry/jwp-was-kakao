@@ -42,4 +42,18 @@ public class RequestHeader {
     public Map<String, String> getQueryParameters() {
         return requestLine.getQueryParameters();
     }
+
+    public Map<String,String> getCookies() {
+        final Map<String, String> cookies = new HashMap<>();
+        final String cookie = headers.get("Cookie");
+        if (cookie == null) {
+            return cookies;
+        }
+        final String[] cookiePairs = cookie.split("; ");
+        for (String cookiePair : cookiePairs) {
+            final String[] pair = cookiePair.split("=");
+            cookies.put(pair[0], pair[1]);
+        }
+        return cookies;
+    }
 }

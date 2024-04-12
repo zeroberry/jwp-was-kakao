@@ -1,14 +1,29 @@
 package service;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 import utils.FileIoUtils;
-import webserver.entity.RequestHeader;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 public class FileService {
-    public byte[] serveFile(final RequestHeader request) throws IOException, URISyntaxException {
-        final String path = request.getPath();
-        return FileIoUtils.loadFileFromClasspath(path);
+
+    private static final String STATIC_PREFIX = "./static/";
+    private static final String TEMPLATES_PREFIX = "/templates";
+    private static final String TEMPLATES_SUFFIX = "";
+
+    public byte[] serveFile(final String path) throws IOException, URISyntaxException {
+        return FileIoUtils.loadFileFromClasspath(STATIC_PREFIX + path);
+    }
+
+    public byte[] render(final String path, final Map<String, Object> data) throws IOException {
+        final TemplateLoader templateLoader = new ClassPathTemplateLoader(TEMPLATES_PREFIX, TEMPLATES_SUFFIX);
+        final Handlebars handlebars = new Handlebars(templateLoader);
+        final Template template = handlebars.compile(path);
+        return template.apply(data).getBytes();
     }
 }
