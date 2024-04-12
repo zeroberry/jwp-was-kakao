@@ -1,6 +1,7 @@
 package webserver;
 
 import dto.CreateUserDto;
+import dto.LoginDto;
 import service.FileService;
 import service.UserService;
 import webserver.entity.RequestEntity;
@@ -8,6 +9,7 @@ import webserver.entity.ResponseEntity;
 
 public class Controller {
     private static final String USER_CREATE_PATH = "/user/create";
+    private static final String USER_LOGIN_PATH = "/user/login";
 
     private final UserService userService;
     private final FileService fileService;
@@ -20,6 +22,9 @@ public class Controller {
     public ResponseEntity service(final RequestEntity request) {
         if (request.pathEquals(USER_CREATE_PATH)) {
             return createUser(request);
+        }
+        if (request.pathEquals(USER_LOGIN_PATH)) {
+            return login(request);
         }
 
         try {
@@ -38,6 +43,19 @@ public class Controller {
         if (request.isPost()) {
             userService.createUser(new CreateUserDto(request.getBody().get()));
             return ResponseEntity.redirectResponseEntity("/index.html");
+        }
+
+        throw new IllegalArgumentException("존재하지 않는 요청입니다.");
+    }
+
+    private ResponseEntity login(final RequestEntity request) {
+        if (request.isPost()) {
+            try {
+                String sessionId = userService.login(new LoginDto(request.getBody().get("userId"), request.getBody().get("password")));
+                return ResponseEntity.redirectResponseEntity("/index.html", "JSESSIONID=" + sessionId + "; Path=/");
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.redirectResponseEntity("/user/login_failed.html");
+            }
         }
 
         throw new IllegalArgumentException("존재하지 않는 요청입니다.");
