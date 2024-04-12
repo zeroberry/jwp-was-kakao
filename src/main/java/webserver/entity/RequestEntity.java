@@ -1,5 +1,7 @@
 package webserver.entity;
 
+import java.util.Map;
+
 public class RequestEntity {
     private final RequestHeader requestHeader;
     private final RequestBody requestBody;
@@ -19,6 +21,10 @@ public class RequestEntity {
 
     public boolean pathEquals(final String path) {
         return requestHeader.getPath().equals(path);
+    }
+
+    public Map<String, String> getQueryParameters() {
+        return requestHeader.getQueryParameters();
     }
 
     public RequestHeader getHeader() {

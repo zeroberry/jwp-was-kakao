@@ -39,7 +39,7 @@ public class RequestHeader {
         return requestLine.getPath();
     }
 
-    public Map<String, String> getQueryParameter() {
+    public Map<String, String> getQueryParameters() {
         return requestLine.getQueryParameters();
     }
 }

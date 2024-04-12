@@ -24,8 +24,8 @@ class RequestHeaderTest {
                 () -> assertThat(requestHeader.getPath()).isEqualTo("/index.html"),
                 () -> assertThat(requestHeader.getHeaderField("Host").isPresent()).isTrue(),
                 () -> assertThat(requestHeader.getHeaderField("Host").get()).isEqualTo("localhost:8080"),
-                () -> assertThat(requestHeader.getQueryParameter().get("name")).isEqualTo("test"),
-                () -> assertThat(requestHeader.getQueryParameter().get("password")).isEqualTo("1234")
+                () -> assertThat(requestHeader.getQueryParameters().get("name")).isEqualTo("test"),
+                () -> assertThat(requestHeader.getQueryParameters().get("password")).isEqualTo("1234")
         );
     }
 }

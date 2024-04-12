@@ -32,7 +32,7 @@ public class Controller {
 
     private ResponseEntity createUser(final RequestEntity request) {
         if (request.isGet()) {
-            userService.createUser(new CreateUserDto(request.getHeader().getQueryParameter()));
+            userService.createUser(new CreateUserDto(request.getQueryParameters()));
             return ResponseEntity.redirectResponseEntity("/index.html");
         }
         if (request.isPost()) {
