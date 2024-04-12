@@ -33,8 +33,13 @@ public class Controller {
     private ResponseEntity createUser(final RequestEntity request) {
         if (request.isGet()) {
             userService.createUser(new CreateUserDto(request.getHeader().getQueryParameter()));
+            return ResponseEntity.redirectResponseEntity("/index.html");
         }
-        userService.createUser(new CreateUserDto(request.getBody().get()));
-        return ResponseEntity.redirectResponseEntity("/index.html");
+        if (request.isPost()) {
+            userService.createUser(new CreateUserDto(request.getBody().get()));
+            return ResponseEntity.redirectResponseEntity("/index.html");
+        }
+
+        throw new IllegalArgumentException("존재하지 않는 요청입니다.");
     }
 }

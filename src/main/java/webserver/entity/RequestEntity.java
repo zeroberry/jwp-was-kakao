@@ -13,6 +13,10 @@ public class RequestEntity {
         return requestHeader.getMethod().equals(HttpMethod.GET);
     }
 
+    public boolean isPost() {
+        return requestHeader.getMethod().equals(HttpMethod.POST);
+    }
+
     public boolean pathEquals(final String path) {
         return requestHeader.getPath().equals(path);
     }
