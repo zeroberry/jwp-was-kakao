@@ -19,6 +19,7 @@ import java.util.Map;
 public class Controller {
     private static final String USER_CREATE_PATH = "/user/create";
     private static final String USER_LOGIN_PATH = "/user/login";
+    private static final String USER_LOGIN_HTML_PATH = "/user/login.html";
     private static final String COOKIE_SESSION_KEY = "JSESSIONID";
 
     private final UserService userService;
@@ -35,6 +36,10 @@ public class Controller {
         }
         if (request.pathEquals(USER_LOGIN_PATH)) {
             return login(request);
+        }
+
+        if(request.pathEquals(USER_LOGIN_HTML_PATH) && isLogin(request)) {
+            return ResponseEntity.redirectResponseEntity("/index.html");
         }
 
         try {

@@ -4,6 +4,7 @@ import webserver.ContentType;
 import webserver.HttpStatusCode;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseEntity {
@@ -19,7 +20,7 @@ public class ResponseEntity {
 
     private ResponseEntity(final HttpStatusCode httpStatusCode, final Map<String, String> headers) {
         this.httpStatusCode = httpStatusCode;
-        this.headers = headers;
+        this.headers = new HashMap<>(headers);
         this.body = new byte[0];
     }
 
