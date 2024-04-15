@@ -10,7 +10,7 @@ public class SessionManager {
         SESSIONS.put(httpSession.getId(), httpSession);
     }
 
-    public static HttpSession getSession(final String jsessionid) {
-        return SESSIONS.get(jsessionid);
+    public static HttpSession getSession(final String sessionId) {
+        return SESSIONS.get(sessionId);
     }
 }
