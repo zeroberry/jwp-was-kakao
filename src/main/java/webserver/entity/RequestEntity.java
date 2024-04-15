@@ -39,7 +39,7 @@ public class RequestEntity {
         return requestBody;
     }
 
-    public Map<String, String> getCookies() {
+    public Cookies getCookies() {
         return requestHeader.getCookies();
     }
 }

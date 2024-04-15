@@ -104,6 +104,6 @@ public class Controller {
     }
 
     private boolean isLogin(final RequestEntity request) {
-        return SessionManager.getSession(request.getCookies().get(COOKIE_SESSION_KEY)) != null;
+        return SessionManager.getSession(request.getCookies().getCookie(COOKIE_SESSION_KEY)) != null;
     }
 }

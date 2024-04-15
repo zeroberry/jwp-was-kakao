@@ -8,10 +8,12 @@ import java.util.Optional;
 public class RequestHeader {
     private final RequestLine requestLine;
     private final Map<String, String> headers;
+    private final Cookies cookies;
 
     public RequestHeader(final RequestLine requestLine, final Map<String, String> headers) {
         this.requestLine = requestLine;
         this.headers = headers;
+        this.cookies = parseCookies(headers);
     }
 
     public static RequestHeader fromHeaderString(final String requestLine, final List<String> headerLines) {
@@ -43,17 +45,12 @@ public class RequestHeader {
         return requestLine.getQueryParameters();
     }
 
-    public Map<String,String> getCookies() {
-        final Map<String, String> cookies = new HashMap<>();
+    private Cookies parseCookies(final Map<String, String> headers) {
         final String cookie = headers.get("Cookie");
-        if (cookie == null) {
-            return cookies;
-        }
-        final String[] cookiePairs = cookie.split("; ");
-        for (String cookiePair : cookiePairs) {
-            final String[] pair = cookiePair.split("=");
-            cookies.put(pair[0], pair[1]);
-        }
+        return new Cookies(cookie);
+    }
+
+    public Cookies getCookies() {
         return cookies;
     }
 }
