@@ -35,11 +35,6 @@ public class ResponseEntity {
                 Map.of("Location", location));
     }
 
-    public static ResponseEntity redirectResponseEntity(final String location, final String cookie) {
-        return new ResponseEntity(HttpStatusCode.FOUND,
-                Map.of("Location", location, "Set-Cookie", cookie));
-    }
-
     public static ResponseEntity notFoundResponseEntity() {
         return new ResponseEntity(HttpStatusCode.NOT_FOUND,
                 Map.of());
@@ -48,6 +43,10 @@ public class ResponseEntity {
     public static ResponseEntity internalServerErrorResponseEntity() {
         return new ResponseEntity(HttpStatusCode.INTERNAL_SERVER_ERROR,
                 Map.of());
+    }
+
+    public void setCookie(final Cookies cookies) {
+        headers.put("Set-Cookie", cookies.toCookieString());
     }
 
     public String toResponseMessage() {

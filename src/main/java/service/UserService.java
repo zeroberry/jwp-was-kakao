@@ -6,7 +6,6 @@ import dto.LoginDto;
 import model.User;
 
 import java.util.Collection;
-import java.util.UUID;
 
 public class UserService {
     public void createUser(final CreateUserDto createUserDto) {
@@ -25,7 +24,7 @@ public class UserService {
         return DataBase.findUserById(testId);
     }
 
-    public String login(final LoginDto loginDto) {
+    public User login(final LoginDto loginDto) {
         final User user = DataBase.findUserById(loginDto.getUserId());
         if (user == null) {
             throw new IllegalArgumentException("존재하지 않는 사용자입니다.");
@@ -34,14 +33,10 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        return UUID.randomUUID().toString();
+        return user;
     }
 
     public Collection<User> findAll() {
         return DataBase.findAll();
-    }
-
-    public boolean isLogin(String jsessionid) {
-        return jsessionid != null;
     }
 }

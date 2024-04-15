@@ -5,8 +5,11 @@ import dto.LoginDto;
 import model.User;
 import service.FileService;
 import service.UserService;
+import webserver.entity.Cookies;
 import webserver.entity.RequestEntity;
 import webserver.entity.ResponseEntity;
+import webserver.session.HttpSession;
+import webserver.session.SessionManager;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,6 +19,7 @@ import java.util.Map;
 public class Controller {
     private static final String USER_CREATE_PATH = "/user/create";
     private static final String USER_LOGIN_PATH = "/user/login";
+    private static final String COOKIE_SESSION_KEY = "JSESSIONID";
 
     private final UserService userService;
     private final FileService fileService;
@@ -54,7 +58,7 @@ public class Controller {
     }
 
     private ResponseEntity getUserList(final RequestEntity request) throws IOException {
-        if (!userService.isLogin(request.getCookies().get("JSESSIONID"))) {
+        if (!isLogin(request)) {
             return ResponseEntity.redirectResponseEntity("/user/login.html");
         }
         final Collection<User> users = userService.findAll();
@@ -78,13 +82,23 @@ public class Controller {
     private ResponseEntity login(final RequestEntity request) {
         if (request.isPost()) {
             try {
-                String sessionId = userService.login(new LoginDto(request.getBody().get("userId"), request.getBody().get("password")));
-                return ResponseEntity.redirectResponseEntity("/index.html", "JSESSIONID=" + sessionId + "; Path=/");
+                final User user = userService.login(new LoginDto(request.getBody().get("userId"), request.getBody().get("password")));
+                final HttpSession httpSession = new HttpSession();
+                httpSession.setAttribute("user", user);
+                SessionManager.addSession(httpSession);
+
+                ResponseEntity responseEntity = ResponseEntity.redirectResponseEntity("/index.html");
+                responseEntity.setCookie(new Cookies(Map.of(COOKIE_SESSION_KEY, httpSession.getId()), "/"));
+                return responseEntity;
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.redirectResponseEntity("/user/login_failed.html");
             }
         }
 
         throw new IllegalArgumentException("존재하지 않는 요청입니다.");
+    }
+
+    private boolean isLogin(final RequestEntity request) {
+        return SessionManager.getSession(request.getCookies().get(COOKIE_SESSION_KEY)) != null;
     }
 }
