@@ -8,21 +8,16 @@ public class CreateUserDto {
     private final String name;
     private final String email;
 
-    public CreateUserDto(final Map<String, String> queryParameters) {
-        validate(queryParameters);
-        this.userId = queryParameters.get("userId");
-        this.password = queryParameters.get("password");
-        this.name = queryParameters.get("name");
-        this.email = queryParameters.get("email");
+
+    public CreateUserDto(final String userId, final String password, final String name, final String email) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.email = email;
     }
 
-    private void validate(final Map<String, String> queryParameters) {
-        if (queryParameters.get("userId") == null ||
-                queryParameters.get("password") == null ||
-                queryParameters.get("name") == null ||
-                queryParameters.get("email") == null) {
-            throw new IllegalArgumentException("입력값이 올바르지 않습니다.");
-        }
+    public static CreateUserDto of(final Map<String, String> values) {
+        return new CreateUserDto(values.get("userId"), values.get("password"), values.get("name"), values.get("email"));
     }
 
     public String getUserId() {

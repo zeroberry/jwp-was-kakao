@@ -16,7 +16,7 @@ class UserServiceTest {
         final UserService userService = new UserService();
         final Map<String, String> testUserMap = generateTestUserOfId("testId");
 
-        userService.createUser(new CreateUserDto(testUserMap));
+        userService.createUser(CreateUserDto.of(testUserMap));
 
         assertNotNull(userService.getUser("testId"));
     }
@@ -26,10 +26,10 @@ class UserServiceTest {
         final UserService userService = new UserService();
 
         final Map<String, String> testUserMap1 = generateTestUserOfId("test");
-        userService.createUser(new CreateUserDto(testUserMap1));
+        userService.createUser(CreateUserDto.of(testUserMap1));
 
         final Map<String, String> testUserMap2 = generateTestUserOfId("test");
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(new CreateUserDto(testUserMap2)));
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser(CreateUserDto.of(testUserMap2)));
     }
 
     private Map<String, String> generateTestUserOfId(final String id) {

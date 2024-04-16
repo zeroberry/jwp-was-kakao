@@ -73,15 +73,26 @@ public class Controller {
 
     private ResponseEntity createUser(final RequestEntity request) {
         if (request.isGet()) {
-            userService.createUser(new CreateUserDto(request.getQueryParameters()));
+            validateCreateUser(request.getQueryParameters());
+            userService.createUser(CreateUserDto.of(request.getQueryParameters()));
             return ResponseEntity.redirectResponseEntity("/index.html");
         }
         if (request.isPost()) {
-            userService.createUser(new CreateUserDto(request.getBody().get()));
+            validateCreateUser(request.getBody().get());
+            userService.createUser(CreateUserDto.of(request.getBody().get()));
             return ResponseEntity.redirectResponseEntity("/index.html");
         }
 
         throw new IllegalArgumentException("존재하지 않는 요청입니다.");
+    }
+
+    private void validateCreateUser(final Map<String, String> values) {
+        if (values.get("userId") == null ||
+                values.get("password") == null ||
+                values.get("name") == null ||
+                values.get("email") == null) {
+            throw new IllegalArgumentException("입력값이 올바르지 않습니다.");
+        }
     }
 
     private ResponseEntity login(final RequestEntity request) {
