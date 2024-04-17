@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Cookies {
+    private static final String COOKIE_SESSION_KEY = "JSESSIONID";
     private static final String COOKIE_NAME_VALUE_DELIMITER = "=";
     private static final String COOKIE_DELIMITER = "; ";
     private static final int COOKIE_KEY_INDEX = 0;
@@ -31,8 +32,16 @@ public class Cookies {
         return new Cookies(cookieMap, ROOT_PATH);
     }
 
+    public static Cookies sessionCookie(final String sessionId) {
+        return new Cookies(Map.of(COOKIE_SESSION_KEY, sessionId), ROOT_PATH);
+    }
+
     public String getCookie(final String key) {
         return cookies.get(key);
+    }
+
+    public String getSessionId() {
+        return cookies.get(COOKIE_SESSION_KEY);
     }
 
     public String toCookieString() {

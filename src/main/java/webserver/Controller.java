@@ -20,7 +20,6 @@ public class Controller {
     private static final String USER_CREATE_PATH = "/user/create";
     private static final String USER_LOGIN_PATH = "/user/login";
     private static final String USER_LOGIN_HTML_PATH = "/user/login.html";
-    private static final String COOKIE_SESSION_KEY = "JSESSIONID";
 
     private final UserService userService;
     private final FileService fileService;
@@ -38,7 +37,7 @@ public class Controller {
             return login(request);
         }
 
-        if(request.pathEquals(USER_LOGIN_HTML_PATH) && isLogin(request)) {
+        if (request.pathEquals(USER_LOGIN_HTML_PATH) && isLogin(request)) {
             return ResponseEntity.redirectResponseEntity("/index.html");
         }
 
@@ -98,14 +97,15 @@ public class Controller {
     private ResponseEntity login(final RequestEntity request) {
         if (request.isPost()) {
             try {
-                final User user = userService.login(new LoginDto(request.getBody().get("userId"), request.getBody().get("password")));
+                final User user = userService.login(new LoginDto(request.getBodyParameter("userId"), request.getBodyParameter("password")));
                 final HttpSession httpSession = new HttpSession();
                 httpSession.setAttribute("user", user);
                 SessionManager.addSession(httpSession);
 
-                ResponseEntity responseEntity = ResponseEntity.redirectResponseEntity("/index.html");
-                responseEntity.setCookie(new Cookies(Map.of(COOKIE_SESSION_KEY, httpSession.getId()), "/"));
-                return responseEntity;
+                return ResponseEntity.redirectResponseEntity(
+                        "/index.html",
+                        Cookies.sessionCookie(httpSession.getId())
+                );
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.redirectResponseEntity("/user/login_failed.html");
             }
@@ -115,6 +115,6 @@ public class Controller {
     }
 
     private boolean isLogin(final RequestEntity request) {
-        return SessionManager.getSession(request.getCookies().getCookie(COOKIE_SESSION_KEY)) != null;
+        return SessionManager.getSession(request.getCookieSessionId()) != null;
     }
 }

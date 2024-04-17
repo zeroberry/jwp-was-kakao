@@ -36,6 +36,12 @@ public class ResponseEntity {
                 Map.of("Location", location));
     }
 
+    public static ResponseEntity redirectResponseEntity(final String location, final Cookies cookies) {
+        final ResponseEntity responseEntity = redirectResponseEntity(location);
+        responseEntity.setCookie(cookies);
+        return responseEntity;
+    }
+
     public static ResponseEntity notFoundResponseEntity() {
         return new ResponseEntity(HttpStatusCode.NOT_FOUND,
                 Map.of());

@@ -39,7 +39,11 @@ public class RequestEntity {
         return requestBody;
     }
 
-    public Cookies getCookies() {
-        return requestHeader.getCookies();
+    public String getBodyParameter(final String key) {
+        return requestBody.get(key);
+    }
+
+    public String getCookieSessionId() {
+        return requestHeader.getCookies().getSessionId();
     }
 }
