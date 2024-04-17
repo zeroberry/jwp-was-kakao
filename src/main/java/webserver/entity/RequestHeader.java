@@ -47,7 +47,7 @@ public class RequestHeader {
 
     private Cookies parseCookies(final Map<String, String> headers) {
         final String cookie = headers.get("Cookie");
-        return new Cookies(cookie);
+        return Cookies.from(cookie);
     }
 
     public Cookies getCookies() {
