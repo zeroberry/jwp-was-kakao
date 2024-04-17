@@ -13,11 +13,23 @@ public class HttpSession {
         this.values = new HashMap<>();
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public Object getAttribute(final String key) {
+        return values.get(key);
+    }
+
     public void setAttribute(final String key, final Object value) {
         values.put(key, value);
     }
 
-    public String getId() {
-        return id;
+    public void removeAttribute(final String key) {
+        values.remove(key);
+    }
+
+    public void invalidate() {
+        values.clear();
     }
 }
