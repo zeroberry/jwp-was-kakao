@@ -8,6 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseEntity {
+    private static final String SET_COOKIE_KEY = "Set-Cookie";
+    private static final String CONTENT_TYPE_KEY = "Content-Type";
+    private static final String CONTENT_LENGTH_KEY = "Content-Length";
+    private static final String LOCATION_KEY = "Location";
+    private static final String HTTP_PROTOCOL = "HTTP/1.1";
+
     private final HttpStatusCode httpStatusCode;
     private final Map<String, String> headers;
     private final byte[] body;
@@ -26,14 +32,14 @@ public class ResponseEntity {
 
     public static ResponseEntity of(final String path, final byte[] body) {
         return new ResponseEntity(HttpStatusCode.OK,
-                Map.of("Content-Type", ContentType.of(path) + ";charset=utf-8",
-                        "Content-Length", String.valueOf(body.length)),
+                Map.of(CONTENT_TYPE_KEY, ContentType.of(path) + ";charset=utf-8",
+                        CONTENT_LENGTH_KEY, String.valueOf(body.length)),
                 body);
     }
 
     public static ResponseEntity redirectResponseEntity(final String location) {
         return new ResponseEntity(HttpStatusCode.FOUND,
-                Map.of("Location", location));
+                Map.of(LOCATION_KEY, location));
     }
 
     public static ResponseEntity redirectResponseEntity(final String location, final Cookies cookies) {
@@ -53,12 +59,12 @@ public class ResponseEntity {
     }
 
     public void setCookie(final Cookies cookies) {
-        headers.put("Set-Cookie", cookies.toCookieString());
+        headers.put(SET_COOKIE_KEY, cookies.toCookieString());
     }
 
     public String toResponseMessage() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("HTTP/1.1 ");
+        stringBuilder.append(HTTP_PROTOCOL + " ");
         stringBuilder.append(httpStatusCode.generateResponseLine());
         headers.forEach((key, value) -> stringBuilder.append(key).append(": ").append(value).append("\r\n"));
         stringBuilder.append("\r\n");
