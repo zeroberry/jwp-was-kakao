@@ -3,7 +3,6 @@ package service;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
-import com.github.jknack.handlebars.io.TemplateLoader;
 import utils.FileIoUtils;
 
 import java.io.IOException;
@@ -19,11 +18,23 @@ public class FileService {
     private static final Handlebars HANDLEBARS = new Handlebars(TEMPLATE_LOADER);
 
     public byte[] serveFile(final String path) throws IOException, URISyntaxException {
+        final String extension = getFileExtension(path);
+        if (extension.equals("html")) {
+            return FileIoUtils.loadFileFromClasspath("." + TEMPLATES_PREFIX + "/" + path);
+        }
         return FileIoUtils.loadFileFromClasspath(STATIC_PREFIX + path);
     }
 
     public byte[] render(final String path, final Map<String, Object> data) throws IOException {
         final Template template = HANDLEBARS.compile(path);
         return template.apply(data).getBytes();
+    }
+
+    private String getFileExtension(final String path) {
+        final int lastIndexOf = path.lastIndexOf(".");
+        if (lastIndexOf == -1) {
+            return "";
+        }
+        return path.substring(lastIndexOf + 1);
     }
 }
