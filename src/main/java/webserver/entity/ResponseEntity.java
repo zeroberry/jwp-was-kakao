@@ -16,50 +16,47 @@ public class ResponseEntity {
 
     private final HttpStatusCode httpStatusCode;
     private final Map<String, String> headers;
+    private final Cookies cookies;
     private final byte[] body;
 
-    private ResponseEntity(final HttpStatusCode httpStatusCode, final Map<String, String> headers, final byte[] body) {
+    private ResponseEntity(final HttpStatusCode httpStatusCode, final Map<String, String> headers, final byte[] body, final Cookies cookies) {
         this.httpStatusCode = httpStatusCode;
         this.headers = headers;
+        this.cookies = cookies;
         this.body = body;
     }
 
-    private ResponseEntity(final HttpStatusCode httpStatusCode, final Map<String, String> headers) {
+    private ResponseEntity(final HttpStatusCode httpStatusCode, final Map<String, String> headers, final Cookies cookies) {
         this.httpStatusCode = httpStatusCode;
         this.headers = new HashMap<>(headers);
         this.body = new byte[0];
+        this.cookies = cookies;
     }
 
     public static ResponseEntity of(final String path, final byte[] body) {
         return new ResponseEntity(HttpStatusCode.OK,
                 Map.of(CONTENT_TYPE_KEY, ContentType.of(path) + ";charset=utf-8",
                         CONTENT_LENGTH_KEY, String.valueOf(body.length)),
-                body);
+                body, Cookies.empty());
     }
 
     public static ResponseEntity redirectResponseEntity(final String location) {
-        return new ResponseEntity(HttpStatusCode.FOUND,
-                Map.of(LOCATION_KEY, location));
+        return redirectResponseEntity(location, Cookies.empty());
     }
 
     public static ResponseEntity redirectResponseEntity(final String location, final Cookies cookies) {
-        final ResponseEntity responseEntity = redirectResponseEntity(location);
-        responseEntity.setCookie(cookies);
-        return responseEntity;
+        return new ResponseEntity(HttpStatusCode.FOUND,
+                Map.of(LOCATION_KEY, location), cookies);
     }
 
     public static ResponseEntity notFoundResponseEntity() {
         return new ResponseEntity(HttpStatusCode.NOT_FOUND,
-                Map.of());
+                Map.of(), Cookies.empty());
     }
 
     public static ResponseEntity internalServerErrorResponseEntity() {
         return new ResponseEntity(HttpStatusCode.INTERNAL_SERVER_ERROR,
-                Map.of());
-    }
-
-    public void setCookie(final Cookies cookies) {
-        headers.put(SET_COOKIE_KEY, cookies.toCookieString());
+                Map.of(), Cookies.empty());
     }
 
     public String toResponseMessage() {
@@ -67,6 +64,7 @@ public class ResponseEntity {
         stringBuilder.append(HTTP_PROTOCOL + " ");
         stringBuilder.append(httpStatusCode.generateResponseLine());
         headers.forEach((key, value) -> stringBuilder.append(key).append(": ").append(value).append("\r\n"));
+        cookies.toCookieString().forEach(cookie -> stringBuilder.append(SET_COOKIE_KEY).append(": ").append(cookie).append("\r\n"));
         stringBuilder.append("\r\n");
         stringBuilder.append(new String(body, StandardCharsets.ISO_8859_1));
         return stringBuilder.toString();

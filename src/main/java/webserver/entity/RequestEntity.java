@@ -46,4 +46,8 @@ public class RequestEntity {
     public String getCookieSessionId() {
         return requestHeader.getCookies().getSessionId();
     }
+
+    public boolean isCookieLogined() {
+        return requestHeader.getCookies().isLogined();
+    }
 }
