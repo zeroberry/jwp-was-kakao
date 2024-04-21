@@ -1,14 +1,19 @@
 package webserver.entity;
 
+import webserver.session.HttpSession;
+import webserver.session.SessionManager;
+
 import java.util.Map;
 
 public class RequestEntity {
     private final RequestHeader requestHeader;
     private final RequestBody requestBody;
+    private final HttpSession httpSession;
 
     public RequestEntity(final RequestHeader requestHeader, final RequestBody requestBody) {
         this.requestHeader = requestHeader;
         this.requestBody = requestBody;
+        this.httpSession = SessionManager.getSession(requestHeader.getSessionId());
     }
 
     public boolean isGet() {

@@ -48,6 +48,10 @@ public class RequestHeader {
         return requestLine.getPath();
     }
 
+    public String getSessionId() {
+        return cookies.getSessionId();
+    }
+
     public Map<String, String> getQueryParameters() {
         return requestLine.getQueryParameters();
     }
