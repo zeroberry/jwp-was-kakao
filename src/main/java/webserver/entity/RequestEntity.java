@@ -4,6 +4,7 @@ import webserver.session.HttpSession;
 import webserver.session.SessionManager;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class RequestEntity {
     private final RequestHeader requestHeader;
@@ -54,5 +55,9 @@ public class RequestEntity {
 
     public boolean isCookieLogined() {
         return requestHeader.getCookies().isLogined();
+    }
+
+    public Optional<HttpSession> getSession() {
+        return Optional.ofNullable(httpSession);
     }
 }

@@ -102,9 +102,8 @@ public class Controller {
         if (request.isPost()) {
             try {
                 final User user = userService.login(new LoginDto(request.getBodyParameter("userId"), request.getBodyParameter("password")));
-                final HttpSession httpSession = new HttpSession();
+                final HttpSession httpSession = getSession(request);
                 httpSession.setAttribute("user", user);
-                SessionManager.addSession(httpSession);
 
                 return ResponseEntity.redirectResponseEntity(
                         INDEX_HTML_PATH,
@@ -116,6 +115,15 @@ public class Controller {
         }
 
         throw new IllegalArgumentException("존재하지 않는 요청입니다.");
+    }
+
+    private HttpSession getSession(final RequestEntity request) {
+        if (request.getSession().isPresent()) {
+            return request.getSession().get();
+        }
+        final HttpSession httpSession = new HttpSession();
+        SessionManager.addSession(httpSession);
+        return httpSession;
     }
 
     private boolean isLogin(final RequestEntity request) {
